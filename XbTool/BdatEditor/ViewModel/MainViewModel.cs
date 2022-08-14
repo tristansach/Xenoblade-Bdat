@@ -310,29 +310,47 @@ namespace BdatEditor.ViewModel
             {
                 Tables = new BdatTables(filename, Game.XB2, false);
                 Names = Tables.Tables.Select(x => x.Name).ToList();
+                return (Tables, Names);
             }
             catch
             {
-                try
-                {
-                    Tables = new BdatTables(filename, Game.XBX, false);
-                    Names = Tables.Tables.Select(x => x.Name).ToList();
-                }
-                catch
-                {
-                    try
-                    {
-                        Tables = new BdatTables(filename, Game.XB1DE, false);
-                        Names = Tables.Tables.Select(x => x.Name).ToList();
-                    }
-                    catch
-                    {
-                        return (null, null);
-                    }
-                }
+                // failed to create tables for xb2
             }
 
-            return (Tables, Names);
+            try
+            {
+                Tables = new BdatTables(filename, Game.XBX, false);
+                Names = Tables.Tables.Select(x => x.Name).ToList();
+                return (Tables, Names);
+            }
+            catch
+            {
+                // failed to create tables for xbx
+            }
+
+            try
+            {
+                Tables = new BdatTables(filename, Game.XB1DE, false);
+                Names = Tables.Tables.Select(x => x.Name).ToList();
+                return (Tables, Names);
+            }
+            catch
+            {
+                // failed to create tables for xb1de 
+            }
+            
+            try
+            {
+                Tables = new BdatTables(filename, Game.XB3, false);
+                Names = Tables.Tables.Select(x => x.Name).ToList();
+                return (Tables, Names);
+            }
+            catch
+            {
+                // failed to create tables for xb3 
+            }
+
+            return (null, null);
         }
         public void OpenBdat(string filename)
         {
