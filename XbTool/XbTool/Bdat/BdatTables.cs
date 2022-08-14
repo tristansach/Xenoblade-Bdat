@@ -8,6 +8,7 @@ using LibHac;
 using LibHac.IO;
 using XbTool.CodeGen;
 using XbTool.Common;
+using XbTool.Save;
 
 namespace XbTool.Bdat
 {
@@ -132,10 +133,32 @@ namespace XbTool.Bdat
 
         private static BdatTable[] ReadBdatFile(DataBuffer file, string filename)
         {
-            if (file.Length <= 12) throw new InvalidDataException("File is too short");
-            int fileLength = file.ReadInt32(4);
-            if (file.Length < fileLength) throw new InvalidDataException("Incorrect file length field");
+            if (file.Game == Game.XB3)
+            {
+                // bdat start
+                string fileType = file.ReadText("UTF-8", 4);
+                if (fileType != "BDAT") throw new InvalidDataException("Not a bdat file.");
+                // bdat version
+                int fileTypeVersion = file.ReadInt8();
+                if (fileTypeVersion != 4) throw new InvalidDataException("Bdat version 4 expected for XB3.");
+                int headerSize = file.ReadInt16();
+                int isArchive = file.ReadInt8();
+                if (isArchive != 1) throw new InvalidDataException("Not an archive!");
+                int subfileCount = file.ReadInt32();
+                int fileSize = file.ReadInt32();
+                if (headerSize != file.Position) throw new InvalidDataException("Header size does not match reality.");
+                
+                // reset file position
+                file.Position = 0;
 
+            }
+            else
+            {
+                if (file.Length <= 12) throw new InvalidDataException("File is too short");
+                int fileLength = file.ReadInt32(4);
+                if (file.Length < fileLength) throw new InvalidDataException("Incorrect file length field");
+            }
+            
             BdatTools.DecryptBdat(file);
             int tableCount = file.ReadInt32(0);
             var tables = new BdatTable[tableCount];

@@ -345,8 +345,10 @@ namespace BdatEditor.ViewModel
                 Names = Tables.Tables.Select(x => x.Name).ToList();
                 return (Tables, Names);
             }
-            catch
+            catch (Exception e)
             {
+                // todo DEBUG
+                System.Diagnostics.Debug.WriteLine(e.Message);
                 // failed to create tables for xb3 
             }
 
