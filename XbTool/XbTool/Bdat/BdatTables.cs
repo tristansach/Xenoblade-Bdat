@@ -136,7 +136,7 @@ namespace XbTool.Bdat
             if (file.Game == Game.XB3)
             {
                 // bdat start
-                string fileType = file.ReadText("UTF-8", 4);
+                string fileType = file.ReadUTF8(4);
                 if (fileType != "BDAT") throw new InvalidDataException("Not a bdat file.");
                 // bdat version
                 int fileTypeVersion = file.ReadInt8();

@@ -8,11 +8,27 @@ namespace XbTool.Bdat
     {
         public static void DecryptBdat(DataBuffer file)
         {
-            int tableCount = file.ReadInt32(0);
+            int tableCount;
+            if (file.Game == Game.XB3)
+            {
+                tableCount = file.ReadInt32(8);
+            }
+            else
+            {
+                tableCount = file.ReadInt32(0);
+            }
 
             for (int i = 0; i < tableCount; i++)
             {
-                int offset = file.ReadInt32(8 + 4 * i);
+                int offset;
+                if (file.Game == Game.XB3)
+                {
+                    offset = file.ReadInt32(16 + 4 * i);
+                }
+                else
+                {
+                    offset = file.ReadInt32(8 + 4 * i);                    
+                }
 
                 DataBuffer table = file.Slice(offset, file.Length - offset);
 
