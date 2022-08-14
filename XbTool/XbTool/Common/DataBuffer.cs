@@ -46,6 +46,7 @@ namespace XbTool.Common
                     return Endianness.Big;
                 case Game.XB2:
                 case Game.XB1DE:
+                case Game.XB3:
                 default:
                     return Endianness.Little;
             }
